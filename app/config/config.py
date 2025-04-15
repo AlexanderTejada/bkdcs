@@ -5,8 +5,8 @@ import logging
 # Configurar logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
-# Cargar archivo .env
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+# === Ajuste de ruta para encontrar el .env en la raíz del proyecto ===
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))  # sube de config/ a app/ a raíz
 ENV_FILE = os.path.join(BASE_DIR, ".env")
 
 if not os.path.exists(ENV_FILE):
@@ -14,7 +14,7 @@ if not os.path.exists(ENV_FILE):
     raise FileNotFoundError(f"Archivo .env no encontrado en {ENV_FILE}")
 
 load_dotenv(ENV_FILE)
-logging.info(f"Archivo .env cargado desde {ENV_FILE}")
+logging.info(f"✅ Archivo .env cargado desde {ENV_FILE}")
 
 def get_env_variable(var_name: str, default_value: str = "") -> str:
     value = os.getenv(var_name, default_value)
@@ -73,10 +73,10 @@ class Config:
         "db2": DB_URI2
     }
 
-    # Frontend CORS
+    # CORS
     CORS_ALLOWED_ORIGINS = get_env_variable("CORS_ALLOWED_ORIGINS", "http://localhost:5173").split(",")
 
-    # Llama API
+    # Llama
     LLAMA_API_URL = get_env_variable("LLAMA_API_URL", "http://localhost:11434/api/generate")
     LLAMA_MODEL = get_env_variable("LLAMA_MODEL", "llama3:latest")
 
@@ -125,4 +125,4 @@ class Config:
             if not var_value:
                 logging.error(f"Variable de configuración requerida no definida: {var_name}")
                 raise ValueError(f"Variable de configuración requerida no definida: {var_name}")
-        logging.info("Todas las variables de configuración requeridas están definidas.")
+        logging.info("✅ Todas las variables de configuración requeridas están definidas.")
