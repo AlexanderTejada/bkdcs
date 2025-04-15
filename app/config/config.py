@@ -62,6 +62,11 @@ CHATTIGO_PASSWORD = get_env_variable("CHATTIGO_PASSWORD")
 CHATTIGO_WEBHOOK_URL = get_env_variable("CHATTIGO_WEBHOOK_URL")
 CHATTIGO_HSM_TEMPLATE_WELCOME = get_env_variable("CHATTIGO_HSM_TEMPLATE_WELCOME")
 
+# WhatsApp (opcional, para evitar errores si no se usa aún)
+WHATSAPP_PHONE_NUMBER_ID = get_env_variable("WHATSAPP_PHONE_NUMBER_ID")
+WHATSAPP_ACCESS_TOKEN = get_env_variable("WHATSAPP_ACCESS_TOKEN")
+WHATSAPP_VERIFY_TOKEN = get_env_variable("WHATSAPP_VERIFY_TOKEN")
+
 # CORS
 CORS_ALLOWED_ORIGINS = get_env_variable("CORS_ALLOWED_ORIGINS", "").split(",")
 
@@ -97,15 +102,17 @@ class Config:
     CHATTIGO_WEBHOOK_URL = CHATTIGO_WEBHOOK_URL
     CHATTIGO_HSM_TEMPLATE_WELCOME = CHATTIGO_HSM_TEMPLATE_WELCOME
 
+    WHATSAPP_PHONE_NUMBER_ID = WHATSAPP_PHONE_NUMBER_ID
+    WHATSAPP_ACCESS_TOKEN = WHATSAPP_ACCESS_TOKEN
+    WHATSAPP_VERIFY_TOKEN = WHATSAPP_VERIFY_TOKEN
+
     @classmethod
     def validate(cls):
         required = [
             ("CHATGPT_API_KEY", cls.CHATGPT_API_KEY),
             ("TELEGRAM_TOKEN", cls.TELEGRAM_TOKEN),
-            ("CHATTIGO_USERNAME", cls.CHATTIGO_USERNAME),
-            ("CHATTIGO_PASSWORD", cls.CHATTIGO_PASSWORD),
         ]
         for var_name, val in required:
             if not val:
                 raise ValueError(f"❌ Variable de entorno obligatoria faltante: {var_name}")
-        logging.info("✅ Todas las variables de configuración obligatorias están presentes.")
+        logging.info("✅ Variables esenciales de configuración presentes.")
