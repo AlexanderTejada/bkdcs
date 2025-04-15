@@ -475,11 +475,15 @@ class TelegramAdapterChatGPT:
             )
             self.redis_client.hset(estado_clave, "fase", "inicio")
 
-        async def run_async(self):
-            logging.info("🚀 Bot de Telegram (ChatGPT) corriendo en modo async...")
-            await self.app.initialize()
-            await self.app.start()
-            await self.app.updater.start_polling()
+    def run(self):
+        import asyncio
+        asyncio.run(self._run_async())
+
+    async def _run_async(self):
+        logging.info("🚀 Bot de Telegram (ChatGPT) corriendo...")
+        await self.app.initialize()
+        await self.app.start()
+        await self.app.updater.start_polling()
 
     def format_reclamos(self, dni=None, is_single=False):
         if is_single and dni:
