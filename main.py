@@ -10,10 +10,10 @@ from app.services.validar_reclamo_chatgpt_usecase import ValidarReclamoService
 from app.services.redis_client import RedisClient
 from app.adapters.telegram_adapter_chatgpt import TelegramAdapterChatGPT
 import logging
-import threading
 import asyncio
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+
 
 def create_app() -> FastAPI:
     app = FastAPI(
@@ -31,19 +31,13 @@ def create_app() -> FastAPI:
     chatgpt_validar_service = ChatGPTValidarReclamoService(redis_client=redis_client)
     validar_reclamo_service = ValidarReclamoService(chatgpt_validar_service)
 
-    # === Bot de Telegram (opcional) ===
-    if Config.TELEGRAM_TOKEN:
-        def run_telegram_bot():
-            logging.info("Iniciando bot de Telegram en un hilo separado...")
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
-            try:
-                telegram_adapter.run()
-            except Exception as e:
-                logging.error(f"Error en el bot de Telegram: {str(e)}")
-            finally:
-                loop.close()
+    # === Inicializar rutas principales y frontend chatbot ===
+    initialize_routes(app, redis_client, detectar_intencion_service, validar_reclamo_service)
+    initialize_frontend_chatbot(redis_client)
+    app.include_router(frontend_chatbot_router, prefix="/api/frontend-chatbot", tags=["Frontend Chatbot"])
 
+    # === Inicializar bot de Telegram (correctamente con async) ===
+    if Config.TELEGRAM_TOKEN:
         telegram_adapter = TelegramAdapterChatGPT(
             token=Config.TELEGRAM_TOKEN,
             detectar_intencion_service=detectar_intencion_service,
@@ -51,15 +45,13 @@ def create_app() -> FastAPI:
             redis_client=redis_client
         )
 
-        telegram_thread = threading.Thread(target=run_telegram_bot, daemon=True)
-        telegram_thread.start()
+        @app.on_event("startup")
+        async def start_telegram_bot():
+            logging.info("🔁 Iniciando bot de Telegram desde evento startup de FastAPI...")
+            asyncio.create_task(telegram_adapter.app.run_polling())
+
     else:
         logging.warning("🚫 TELEGRAM_TOKEN no definido. Bot de Telegram no será iniciado.")
-
-    # === Inicializar rutas principales y frontend chatbot ===
-    initialize_routes(app, redis_client, detectar_intencion_service, validar_reclamo_service)
-    initialize_frontend_chatbot(redis_client)
-    app.include_router(frontend_chatbot_router, prefix="/api/frontend-chatbot", tags=["Frontend Chatbot"])
 
     # === Endpoint de prueba ===
     @app.get("/test")
@@ -67,6 +59,7 @@ def create_app() -> FastAPI:
         return {"message": "Backend is running"}
 
     return app
+
 
 # Railway usará esta variable directamente
 app = create_app()
