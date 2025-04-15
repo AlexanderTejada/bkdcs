@@ -1,0 +1,76 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Entornos virtuales
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Configuración del entorno
+*.env
+.env.*
+
+# Archivos de log
+*.log
+
+# Configuración de IDEs
+.vscode/
+.idea/
+
+# Cachés y metadatos
+*.sqlite3
+*.db
+*.pkl
+*.cache
+*.pot
+*.mo
+*.pyc
+*.pyo
+*.pyd
+migrations/
+__pypackages__/
+
+# pytest
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# coverage
+coverage.xml
+*.cover
+*.py,cover
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# pipenv
+Pipfile.lock
+
+# Poetry
+poetry.lock
+
+# Build
+build/
+dist/
+*.egg-info/
+
+# Docker
+*.pid
+*.tar
+*.gz
+*.img
+
+# OS
+.DS_Store
+Thumbs.db
+
+# FastAPI specific (si usás Uvicorn en desarrollo)
+instance/

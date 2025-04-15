@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Factura</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .factura-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            color: #007bff;
+            margin: 0;
+            font-size: 24px;
+        }
+        .header p {
+            color: #666;
+            margin: 5px 0;
+        }
+        .factura-details {
+            margin-bottom: 20px;
+        }
+        .factura-details p {
+            margin: 5px 0;
+            font-size: 16px;
+            color: #333;
+        }
+        .factura-details p strong {
+            color: #007bff;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
+            color: #666;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="factura-container">
+        <div class="header">
+            <h1>Factura de Servicios Eléctricos</h1>
+            <p>Distribuidora Eléctrica de Caucete S.A. (DECSA)</p>
+        </div>
+        <div class="factura-details">
+            <p><strong>Cliente:</strong> {{ factura['Nombre'] }} (DNI: {{ dni }})</p>
+            <p><strong>Número de Cuenta:</strong> {{ factura['CodigoSuministro'] }}</p>
+            <p><strong>N° Comprobante:</strong> {{ factura['NumeroComprobante'] }}</p>
+            <p><strong>Fecha de Emisión:</strong> {{ factura['FechaEmision'] }}</p>
+            <p><strong>Estado:</strong> {{ factura['Estado'] }}</p>
+            <p><strong>Total:</strong> ${{ factura['Total']|floatformat:2 }}</p>
+            <p><strong>Vencimiento:</strong> {{ factura['Vencimiento'] }}</p>
+            <p><strong>Dirección:</strong> {{ factura['Calle'] }}, {{ factura['Barrio'] }}</p>
+            <p><strong>Medidor:</strong> {{ factura['NumeroMedidor'] }}</p>
+            <p><strong>Período:</strong> {{ factura['Periodo'] }}</p>
+            <p><strong>Consumo:</strong> {{ factura['Consumo'] }} kWh</p>
+        </div>
+        <div class="footer">
+            <p>Gracias por elegir DECSA. Si tienes alguna consulta, contáctanos.</p>
+        </div>
+    </div>
+</body>
+</html>
